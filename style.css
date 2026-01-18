@@ -145,3 +145,15 @@ h2 {
 	font-size: 20px;
 }
 }
+
+.indent {
+  margin-left: 1em;
+}
+
+.key {
+  background: #e8f4f8;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 0.9em;
+}
