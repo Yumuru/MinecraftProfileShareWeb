@@ -1,0 +1,353 @@
+[
+  { "text" : "Mod構成 - ベース", "class" : "h2" },
+  [
+    { "参考ページ": null, "class": "h3" },
+    [
+      { "Mod構成": null },
+      [
+        {
+          "item": {
+            "link": {
+              "name": "【マイクラ】1.20.1 バニラをより豊かにするおすすめMOD100選",
+              "href": "https://note.com/nachitane/n/nc7656c2c140a"
+            }
+          }
+        }
+      ],
+      { "シェーダー": null },
+      [
+        {
+          "item": {
+            "link": {
+              "name": "【マイクラ】シェーダー比べてみた",
+              "href": "https://note.com/nachitane/n/nc7656c2c140a"
+            }
+          }
+        }
+      ]
+    ],
+    { "キー設定の変更": null, "class": "h3" },
+    [
+      { "item": "Fキー" },
+      [[
+        { "変更前": "アイテム左右持ち替え" },
+        { "変更後": "FTB Ultimine (一括破壊)" }
+      ]],
+      {
+        "item": "Gキー"
+      },
+      [[
+        { "変更後": "アイテム左右持ち替え" }
+      ]]
+    ],
+    { "Modピックアップ": null, "class": "h3" },
+    [
+      { "item": "FTB Ultimine" , "class":  "bold" },
+      [[
+        { "Fキー": "一括破壊" },
+        { "Shift + Fキー": "マウスホイールで破壊方法切り替え" }
+      ]],
+      { "item": "EMI", "class": "bold" },
+      [
+        { "item": "アイテム一覧" },
+        { "item": "アイテムを検索できる" },
+        [[
+          { "Ctrl + F": "検索バーにフォーカス" },
+          { "Ctrl + C": "検索バーをクリア" }
+        ]],
+        {
+          "item": { "レシピ閲覧機能": "アイテムのレシピを確認できる" }
+        },
+        [[
+          { "アイテムの作り方の確認キー操作": null, "class": "underline" },
+          [
+            { "item": "アイテム一覧のアイテムクリック" },
+            { "item": "レシピ閲覧中のアイテムクリック" },
+            { "item": "アイテムにカーソルをかざしてRキー" }
+          ],
+          { "アイテムがどこで使われるか確認キー操作": null, "class": "underline" },
+          [
+            { "item": "アイテム一覧のアイテム右クリック" },
+            { "item": "レシピ閲覧中のアイテム右クリック" },
+            { "item": "アイテムにカーソルをかざしてUキー" }
+          ]
+        ]],
+        { "item": "アイテム/レシピお気に入り機能" },
+        [[
+          "アイテム/レシピにカーソルをかざしてAキー"
+        ]]
+      ],
+      { "item": "FTB Chunks", "class": "bold" },
+      [[
+        { "機能": null },
+        [
+          { "マップ機能": null, "class": "underline" },
+          [
+            { "Mキー": "全体マップ表示" },
+            { "ウェイポイント設定": "全体マップで右クリック" }
+          ],
+          { "チャンク強制読み込み": null, "class": "underline" },
+          [
+            "インベントリの左上のマップボタンの右側で",
+            "強制読み込みさせるチャンクを選択できる"
+          ]
+        ],
+        {
+          "参考": {
+            "link": {
+              "name": "https://www.mine-blog.tech/ftb-chunks/",
+              "href": "https://www.mine-blog.tech/ftb-chunks/"
+            }
+          }
+        }
+      ]],
+      { "item": "Bridging Mod", "class": "bold" },
+      [[ "目線先にブロックを設置できる (橋を伸ばすなどに使う)" ]],
+      { "item": "invMove (デフォルトはオフ)", "class": "bold" },
+      [[
+        "インベントリ開いたまま移動できる",
+        { "切り替えキー": "F4" }
+      ]],
+      { "item": "Carry On", "class": "bold" },
+      [[ "Shift + 右クリック でチェストやMobを持てる" ]],
+      { "item": "RightClickHarvest", "class": "bold" },
+      [[ "収穫時に、種植えも同時にやってくれる" ]],
+      { "item": "Inventory Essentials", "class": "bold" },
+      [[
+        { "アイテムをControl+クリック": null, "class": "underline" },
+        [ "スタック全体ではなく1つのアイテムだけをクイック移動させる" ],
+        { "アイテムをShift+Control+クリック": null, "class": "underline" },
+        [
+          "そのアイテムタイプのスタックを素早く移動させる",
+          "(例:チェストの石畳をすべてインベントリに)"
+        ],
+        { "Shiftを押しながらクリックをホールドしつつカーソルを移動": null, "class": "underline" },
+        [ "個別にクリックせずに素早く移動できる" ],
+        { "各スロット上をドラッグ": null, "class": "underline" },
+        [
+          "通り過ぎる際にアイテムを挿入または空に",
+          "(アイテムをまとめる / アイテムを並べる)"
+        ],
+        { "インベントリで中クリック": null, "class": "underline" },
+        [ "インベントリのソート" ]
+      ]],
+      { "item": "Waystones", "class": "bold" },
+      [[ "ワープできる" ]],
+      { "item": "MmmMmmMmmMmm", "class": "bold" }, 
+      [[ "ダミートーテムを追加" ]],
+      { "item": "Lighty", "class": "bold" },
+      [[
+        { "F8キー": "沸きつぶし確認" },
+        { "F7キー": "設定 (表示タイプ変更など)" }
+      ]],
+      { "item": "Essential", "class": "bold" },
+      [[
+        { "説明": "お手軽マルチプレイ" },
+        { "Hキー": "マルチプレイのソーシャル機能のハブ" }
+      ]]
+    ],
+    { "Mod構成詳細": null, "class": "h3" },
+    [
+      { "体験を改善": null, "class": "bold" },
+      [
+        { "探索・移動": null, "class": "bold" },
+        [
+          { "item": "Callable Horses (馬を呼び出し)" },
+          [[ "Vキー(デフォルト)で手懐けた馬を呼べる" ]],
+          { "item": "Jump Over Fences (フェンス飛び越え)" },
+          { "item": "Forgiving Void (奈落から復帰)" },
+          [[ "奈落に落ちると上空に返ってくる" ]],
+          { "item": "invMove (インベントリ開いたまま移動)" },
+          { "item": "Client Tweaks (はしご自動登り等)" }
+        ],
+        { "戦闘": null, "class": "bold" },
+        [
+          { "item": "Attack Through Grass (草貫通攻撃)" },
+          { "item": "Charm of Undying (不死のトーテムスロット)" }
+        ],
+        { "採集・建築": null, "class": "bold" },
+        [
+          { "item": "RightClickHarvest (右クリック収穫+種植え)" },
+          { "item": "FTB Ultimine (一括破壊)" },
+          { "item": "Leaves Be Gone (葉っぱ即消失)" },
+          { "item": "Bridging Mod (目線先にブロック設置)" },
+          { "item": "Double Doors (両開きドア同時開閉)" },
+          { "item": "Visual Workbench (作業台にアイテム表示)" },
+          { "item": "Amendments (ブロックの動作改善)" },
+          [
+            { "item": "葉ブロックの上に物を置けるようになる" },
+            { "item": "階段にカーペットを敷ける" },
+            "など"
+          ]
+        ],
+        { "運搬・整理": null, "class": "bold" },
+        [
+          { "item": "Carry On (チェスト・Mob運搬)" },
+          [[ "チェストやMobを手に持って運べるように" ]],
+          { "item": "ClickThrough Plus (額縁・看板貫通でチェスト開ける)" },
+          { "item": "Inventory Essentials (中クリックでソート、インベントリの一括移動など)" },
+          { "item": "Mouse Tweaks (インベントリマウス操作拡張)" },
+          { "item": "TrashSlot (ゴミ箱スロット)" },
+          { "item": "Polymorph (作業台で重複レシピ切り替え)" }
+        ],
+        { "強化・修繕": null, "class": "bold" },
+        [
+          { "item":"Better Than Mending (経験値で修繕)" },
+          [[ "しゃがみ右クリックで、自分の経験値を使って修繕" ]],
+          { "item": "Enchantment Transfer (エンチャント本移し)" }
+        ],
+        { "村人・取引": null, "class": "bold" },
+        [
+          { "item": "Trade Cycling (取引リロール)" }
+        ],
+        { "マルチプレイ": null, "class": "bold" },
+        [
+          { "Lootr (ルートチェスト個別化)": null },
+          [ "ルートチェストの中身が、マルチプレイヤーで変化" ]
+        ],
+        { "死亡時": null, "class": "bold" },
+        [
+          { "item": "GraveStone Mod (死亡時墓生成)" }
+        ],
+        { "ワールド変化": null, "class": "bold" },
+        [
+          { "item": "Flat Bedrock (岩盤平坦化)" }
+        ],
+        { "システム・基盤": null, "class": "bold" },
+        [
+          { "item": "FTB Chunks (チャンク強制読み込み)" },
+          [[ "マップも兼ねる" ]],
+          { "item": "Crafting Tweaks (作業台の便利な機能を追加)" }
+        ]
+      ],
+      { "アイテム・ブロック追加": null, "class": "bold" },
+      [
+        { "探索支援": null, "class": "bold" },
+        [
+          { "item": "Explorer's Compass (構造物の位置を示すコンパス)" },
+          { "item": "Nature's Compass (バイオームの位置を示すコンパス)" },
+          { "item": "Waystones (ワープできる石碑)" }
+        ],
+        { "取引・交換": null, "class": "bold" },
+        [
+          { "item": "Bartering Station (ピグリンとの取引を楽に)" },
+          { "item": "Trading Post (村人との取引が楽に)" }
+        ],
+        { "生活・設備": null, "class": "bold" },
+        [
+          { "item": "Animal Feeding Trough (エサ箱)" },
+          { "item": "Comforts (寝袋)" },
+          { "item": "MmmMmmMmmMmm (ターゲットダミー)" }
+        ],
+        { "建築・整地": null, "class": "bold" },
+        [
+          { "item": "Hole Filler Mod (穴を一瞬で埋める)" }
+        ]
+      ],
+      { "ディメンション追加": null, "class": "bold" },
+      [
+        { "item": "JAMD (敵なし、常時昼、地面だけの採掘用ディメンション)" }
+      ],
+      { "情報表示": null, "class": "bold" },
+      [
+        { "ワールド内表示": null, "class": "bold" },
+        [
+          { "item": "Jade (見ているものの情報)" },
+          { "item": "Lighty (沸き潰し可視化)" },
+          { "item": "Traveler's Titles (バイオーム名表示)" },
+          [["踏み入れたバイオームの名称をRPG風に表示" ]]
+        ],
+        { "プレイヤー状態": null, "class": "bold" },
+        [
+          { "item": "AppleSkin (隠し満腹度・回復量)" },
+          { "item": "Stylish Effects (ステータス効果表示改善)" }
+        ],
+        { "通知・フィードバック": null, "class": "bold" },
+        [
+          { "item": "Pick Up Notifier (アイテム拾得通知)" },
+          { "item": "Better Advancements (実績表示改善)" }
+        ],
+        { "アイテム・インベントリ": null, "class": "bold" },
+        [
+          { "item": "Durability Tooltip (耐久力数値表示)" },
+          { "item": "Enchantment Descriptions (エンチャント説明)" },
+          { "item": "EMI+Addon (レシピ・アイテム一覧)" },
+          [
+            { "item": "EMI" },
+            { "item": "EMI Enchanting" },
+            { "item": "EMI Loot" },
+            { "item": "EMI Ores" },
+            { "item": "EMI Trades" },
+            { "item": "EMIffect" }
+          ]
+        ],
+        { "デバッグ・システム": null, "class": "bold" },
+        [
+          { "item": "Better F3 (デバッグ表示改善)" },
+          { "item": "Better Ping Display (Ping表示)" }
+        ]
+      ],
+      { "グラフィック": null, "class": "bold" },
+      [
+        { "モデル": null, "class": "bold" },
+        [
+          { "item": "Yes Steve Model (好きなキャラクターモデルを使える)" }
+        ],
+        { "ワールド内": null, "class": "bold" },
+        [
+          { "item": "Cave Dust (洞窟の中でDustを表示)" },
+          { "item": "Connectible Chains (鎖を繋げて表示)" },
+          { "item": "Eating Animations (食事アニメーションを改善)" },
+          { "item": "Not Enough Animations (各種アニメーションを改善)" }
+        ],
+        { "エフェクト": null, "class": "bold" },
+        [
+          { "item": "Explosive Enhancement (爆発エフェクト)" },
+          { "item": "Falling Leaves (葉が落ちてくる)" },
+          { "item": "Make Bubbles Pop (水中の泡エフェクト)" },
+          { "item": "Visuality (Mobのエフェクト)" }
+        ],
+        { "レンダリング": null, "class": "bold" },
+        [
+          { "item": "Ambient Environment (草原などのテクスチャ表示改善)" },
+          { "item": "Distant Horizons (遠景を綺麗に表示)" },
+          { "item": "Oculus (シェーダーMod)" }
+        ],
+        { "UI": null, "class": "bold" },
+        [
+          { "item": "Blur (インベントリの周りにブラー)" },
+          { "item": "Legendary Tooltips" },
+          [[ "ツールチップ(アイテムにカーソルを合わせたときの表示)が豪華に" ]]
+        ]
+      ],
+      { "サウンド": null, "class": "bold" },
+      [
+        { "item": "AmbientSounds (環境音)" },
+        { "item": "Presense Footsteps (足音)" },
+        { "item": "Sound Physics Remastered (物理的な環境音)" }
+      ],
+      { "設定・システム": null, "class": "bold" },
+      [
+        { "item": "Untranslated Items" },
+        [
+          "アイテムを英語(US)でも表示する",
+          "日本語設定でも、検索時に英語で検索しやすくする"
+        ],
+        { "item": { "Controlling": "キーバインド設定に検索機能を追加" } }
+      ],
+      {
+        "最適化": null, "class": "bold"
+      },
+      [
+        { "item": "Language Reload" },
+        [[ "言語切り替え時に読み込み時間短縮" ]],
+        { "item": "Embeddium" }
+      ],
+      { "マルチプレイヤー": null, "class": "bold" },
+      [
+        { "item": "Essensial (サーバーなしマルチプレイ)" },
+        { "item": "AutoModpack (クライアントにmodを共有)" }
+      ]
+    ]
+  ]
+]

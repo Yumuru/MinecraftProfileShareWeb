@@ -1,0 +1,55 @@
+[
+  { "text" : "Mod構成 - 便利アイテム・ブロック", "class" : "h2" },
+  [
+    { "参考ページ": null, "class": "h3" },
+    [
+      { "Mod構成": null },
+      [
+        {
+          "item": {
+            "link": {
+              "name": "【マイクラ】1.20.1 バニラをより豊かにするおすすめMOD100選",
+              "href": "https://note.com/nachitane/n/nc7656c2c140a"
+            }
+          }
+        }
+      ]
+    ],
+    { "Mod構成詳細": null, "class": "h3" },
+    [
+      { "道具": null, "class": "bold" },
+      [
+        { "item": "Crafting on a stick (手持ち作業台)" }
+      ],
+      { "探索支援": null, "class": "bold" },
+      [
+        { "item": "Explorer's Compass (構造物の位置を示すコンパス)" },
+        { "item": "Nature's Compass (バイオームの位置を示すコンパス)" },
+        { "item": "Waystones (ワープできる石碑)" },
+        { "item": "Sophisticated Backpacks (バックパック)" }
+      ],
+      { "取引・交換": null, "class": "bold" },
+      [
+        { "item": "Bartering Station (ピグリンとの取引を楽に)" },
+        { "item": "Trading Post (村人との取引が楽に)" }
+      ],
+      { "生活・設備": null, "class": "bold" },
+      [
+        { "item": "Animal Feeding Trough (エサ箱)" },
+        { "item": "Comforts (寝袋)" },
+        { "item": "MmmMmmMmmMmm (ターゲットダミー)" },
+        { "item": "Snad (サトウキビ高速成長の砂)" },
+        { "item": "Sophisticated Storage (1種類のアイテムをたくさん入れられるなど)" },
+        { "item": "Iron Chests (大容量チェスト)" }
+      ],
+      { "建築・整地": null, "class": "bold" },
+      [
+        { "item": "Hole Filler Mod (穴を一瞬で埋める)" }
+      ],
+      { "ディメンション追加": null, "class": "bold" },
+      [
+        { "item": "JAMD (敵なし、常時昼、地面だけの採掘用ディメンション)" }
+      ]
+    ]
+  ]
+]

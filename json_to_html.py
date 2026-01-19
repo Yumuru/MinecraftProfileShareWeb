@@ -1,42 +1,42 @@
+import os
 import json
 import sys
+from pathlib import Path
 
 class Node:
-    def __init__(self, data, css_class=None, is_section=False):
+    def __init__(self, data=None, is_section=False):
         self.children = []
         self.content = ""
-        self.css_class = css_class
+        self.css_class = None
         self.is_item = False
         self.is_section = is_section
         
-        if not is_section:
-            self._parse_data(data)
+        if is_section:
+            self.children = data if isinstance(data, list) else [data]
         else:
-            self.children = data
+            self._parse_data(data)
 
     def _parse_data(self, data):
         if isinstance(data, dict):
-            self.css_class = data.get("class", self.css_class)
+            self.css_class = data.get("class")
             self.is_item = "item" in data
+            
+            # childrenがある場合、コンテナとして子を保持する
+            if "children" in data:
+                self.children.extend(parse_json_to_tree(data["children"]))
+
             parts = []
             for k, v in data.items():
-                if k == "class": continue
-                
-                if k == "item" or k == "text":
+                if k in ["class", "children"]: continue
+                if k in ["item", "text"]:
                     res = self._dispatch_value(v)
                     if res: parts.append(res)
                 elif k == "link":
                     parts.append(self._format_link(v))
                 else:
                     val = self._dispatch_value(v)
-                    if val:
-                        # key : value 全体をcontentにする
-                        parts.append(f"{k} : {val}")
-                    else:
-                        # key : null の場合、「key :」までをcontentにする
-                        # これでクラス適用のspan内に「 :」が含まれる
-                        parts.append(f"{k} :")
-            
+                    if val: parts.append(f"{k} : {val}")
+                    else: parts.append(f"{k} :")
             self.content = " ".join(parts)
         else:
             self.content = str(data)
@@ -53,41 +53,56 @@ class Node:
         if not l: return ""
         return f'<a href="{l.get("href")}">{l.get("name")}</a>'
 
-def parse_json_to_tree(data, css_class=None):
+def parse_json_to_tree(data):
     if isinstance(data, list):
         nodes = []
         for item in data:
             if isinstance(item, list):
-                section_content = parse_json_to_tree(item, css_class)
-                nodes.append(Node(section_content, css_class, is_section=True))
+                if nodes and not nodes[-1].is_section and not nodes[-1].children:
+                    nodes[-1].children.extend(parse_json_to_tree(item))
+                else:
+                    section_content = parse_json_to_tree(item)
+                    nodes.append(Node(section_content, is_section=True))
             else:
-                nodes.append(Node(item, css_class))
+                nodes.append(Node(item))
         return nodes
-    return [Node(data, css_class)]
+    return [Node(data)]
 
 def node_to_html(node, indent_level=0):
     indent = "  " * indent_level
+    class_attr = f' class="{node.css_class}"' if node.css_class else ''
     
+    # 1. セクション（リスト）
     if node.is_section:
-        # リストに由来するインデントブロック
         html = f"{indent}<div class=\"indent\">\n"
         for child in node.children:
             html += node_to_html(child, indent_level + 2)
         html += f"{indent}</div>\n"
-    else:
-        # 辞書や文字列に由来する「1行」の div
-        if not node.content: return ""
+        return html
+
+    # 2. コンテナ（childrenをまとめるdiv）
+    # contentが空で、childrenがある場合は、クラスを適用した器を作る
+    if not node.content and node.children:
+        html = f"{indent}<div{class_attr}>\n"
+        for child in node.children:
+            html += node_to_html(child, indent_level + 2)
+        html += f"{indent}</div>\n"
+        return html
+
+    # 3. 通常の1行
+    if not node.content: return ""
+    
+    prefix = "・ " if node.is_item else ""
+    # ここから suffix (コロン足し算) を完全に削除したよ
+    html = f"{indent}<div{class_attr}>{prefix}{node.content}</div>\n"
+    
+    # 子要素があれば、その直下にインデントブロックを作る
+    if node.children:
+        html += f"{indent}<div class=\"indent\">\n"
+        for child in node.children:
+            html += node_to_html(child, indent_level + 2)
+        html += f"{indent}</div>\n"
         
-        class_attr = f' class="{node.css_class}"' if node.css_class else ''
-        # item の場合は行頭に「・ 」を置く
-        prefix = "・ " if node.is_item else ""
-        
-        # 子（リスト）を持っている場合は見出しとして「 :」を添える
-        suffix = " :" if node.children else ""
-        
-        # 1行を丸ごと div で包む
-        html = f"{indent}<div{class_attr}>{prefix}{node.content}{suffix}</div>\n"
-            
     return html
 
 def json_to_html(json_data, output_file="output.html"):
@@ -102,7 +117,7 @@ def json_to_html(json_data, output_file="output.html"):
 <head>
 <meta charset="utf-8">
 <title>Minecraft Mod構成 1.20.1</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../docs/style.css">
 </head>
 <body>
 <div id="outer">
@@ -137,27 +152,43 @@ def json_to_html(json_data, output_file="output.html"):
     print(f"HTMLファイルを生成しました: {output_file}")
 
 
-# 使用例
 if __name__ == "__main__":
-    # コマンドライン引数の処理
-    if len(sys.argv) < 2:
-        print("使用方法: python json_to_html.py <入力JSONファイル> [出力HTMLファイル]")
-        print("例: python json_to_html.py mod_config.json minecraft_mod_config.html")
+    # 入力と出力のディレクトリ設定
+    input_dir = Path('jsons')
+    output_dir = Path('to_htmls')
+
+    # 出力フォルダがなければ作成するよ
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # jsonsフォルダが存在するかチェック
+    if not input_dir.exists() or not input_dir.is_dir():
+        print(f"エラー: フォルダ '{input_dir}' が見つかりません。")
         sys.exit(1)
+
+    # フォルダ内の .json ファイルをループで処理
+    json_files = list(input_dir.glob('*.json'))
     
-    input_file = sys.argv[1]
-    output_file = sys.argv[2] if len(sys.argv) > 2 else 'output.html'
-    
-    # JSONファイルを読み込み
-    try:
-        with open(input_file, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+    if not json_files:
+        print("処理するJSONファイルが見つからなかったよ。")
+        sys.exit(0)
+
+    print(f"{len(json_files)} 個のファイルを処理するね！")
+
+    for json_path in json_files:
+        # 出力ファイル名を決定 (拡張子を .html に変えて output_dir へ)
+        output_path = output_dir / json_path.with_suffix('.html').name
         
-        # HTMLを生成
-        json_to_html(data, output_file)
-    except FileNotFoundError:
-        print(f"エラー: ファイル '{input_file}' が見つかりません")
-        sys.exit(1)
-    except json.JSONDecodeError:
-        print(f"エラー: '{input_file}' は有効なJSONファイルではありません")
-        sys.exit(1)
+        try:
+            with open(json_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            
+            # HTMLを生成
+            json_to_html(data, str(output_path))
+            print(f"成功: {json_path.name} -> {output_path.name}")
+            
+        except json.JSONDecodeError:
+            print(f"エラー: '{json_path.name}' は有効なJSONじゃないみたい。")
+        except Exception as e:
+            print(f"予期せぬエラー ({json_path.name}): {e}")
+
+    print("\n全部の処理が終わったよ！")
