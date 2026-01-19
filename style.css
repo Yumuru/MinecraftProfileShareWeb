@@ -178,7 +178,8 @@ blockquote {
   }
 }
 .indent {
-  margin-left: 1em;
+  margin-left: 1.0em;
+  margin-top: 0.2em;
 }
 .key {
   background: #e8f4f8;
@@ -186,4 +187,7 @@ blockquote {
   border-radius: 3px;
   font-family: monospace;
   font-size: 0.9em;
+}
+.bold {
+  font-weight: bold;
 }

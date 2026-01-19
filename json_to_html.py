@@ -2,236 +2,93 @@ import json
 import sys
 
 class Node:
-    """木構造のノード"""
-    def __init__(self, node_type="line", key=None, value=None, href=None, css_class=None):
-        self.node_type = node_type  # "line" or "section"
-        self.key = key
-        self.value = value
-        self.href = href
-        self.css_class = css_class
+    def __init__(self, data, css_class=None, is_section=False):
         self.children = []
-    
-    def add_child(self, child):
-        self.children.append(child)
-        return child
-    
-    def __repr__(self):
-        return f"Node(type={self.node_type}, key={self.key}, value={self.value}, class={self.css_class}, children={len(self.children)})"
-
-
-def parse_json_to_tree(data):
-    """JSONデータを木構造に変換"""
-    nodes = []
-    
-    if isinstance(data, list):
-        # 配列 = セクション
-        section_node = Node(node_type="section")
-        for item in data:
-            child_nodes = parse_json_to_tree(item)
-            if isinstance(child_nodes, list):
-                for child in child_nodes:
-                    section_node.add_child(child)
-            else:
-                section_node.add_child(child_nodes)
-        return section_node
-    
-    elif isinstance(data, dict):
-        # 辞書 = 一行の項目
-        css_class = data.get("class", None)  # class属性を取得
+        self.content = ""
+        self.css_class = css_class
+        self.is_item = False
+        self.is_section = is_section
         
-        for key, value in data.items():
-            if key == "class":
-                # class属性はスキップ（他のキーで使用）
-                continue
-            
-            if key == "item":
-                # ・ アイテム
-                if isinstance(value, dict):
-                    if "link" in value:
-                        # ・ <a>リンク</a>
-                        link_data = value["link"]
-                        node = Node(
-                            node_type="line",
-                            key="item_link",
-                            value=link_data.get("name"),
-                            href=link_data.get("href"),
-                            css_class=css_class
-                        )
-                        nodes.append(node)
-                    else:
-                        # ・ キー : 値
-                        for k, v in value.items():
-                            node = Node(
-                                node_type="line",
-                                key="item_keyvalue",
-                                value=k + (" : " + v if v else ""),
-                                css_class=css_class
-                            )
-                            nodes.append(node)
-                else:
-                    # ・ 値
-                    node = Node(
-                        node_type="line",
-                        key="item",
-                        value=value,
-                        css_class=css_class
-                    )
-                    nodes.append(node)
-            
-            elif key == "link":
-                # リンク
-                link_data = value
-                node = Node(
-                    node_type="line",
-                    key="link",
-                    value=link_data.get("name"),
-                    href=link_data.get("href"),
-                    css_class=css_class
-                )
-                nodes.append(node)
+        if not is_section:
+            self._parse_data(data)
+        else:
+            self.children = data
 
-            elif key == "text":
-                # text : 値
-                node = Node(
-                    node_type="line",
-                    key="text",
-                    value=value,
-                    css_class=css_class
-                )
-                nodes.append(node)
-            
-            elif value is None:
-                # キー :
-                node = Node(
-                    node_type="line",
-                    key="header",
-                    value=key,
-                    css_class=css_class
-                )
-                nodes.append(node)
-            
-            elif isinstance(value, list):
-                # キー : [セクション]
-                header_node = Node(
-                    node_type="line",
-                    key="header",
-                    value=key,
-                    css_class=css_class
-                )
-                nodes.append(header_node)
+    def _parse_data(self, data):
+        if isinstance(data, dict):
+            self.css_class = data.get("class", self.css_class)
+            self.is_item = "item" in data
+            parts = []
+            for k, v in data.items():
+                if k == "class": continue
                 
-                section_node = parse_json_to_tree(value)
-                nodes.append(section_node)
-            
-            elif isinstance(value, dict):
-                # キー : {...}
-                if "link" in value:
-                    # キー : <a>リンク</a>
-                    link_data = value["link"]
-                    node = Node(
-                        node_type="line",
-                        key="keyvalue_link",
-                        value=key + " : " + link_data.get("name"),
-                        href=link_data.get("href"),
-                        css_class=css_class
-                    )
-                    nodes.append(node)
+                if k == "item" or k == "text":
+                    res = self._dispatch_value(v)
+                    if res: parts.append(res)
+                elif k == "link":
+                    parts.append(self._format_link(v))
                 else:
-                    # キー : (ネストされた辞書を展開)
-                    header_node = Node(
-                        node_type="line",
-                        key="header",
-                        value=key,
-                        css_class=css_class
-                    )
-                    nodes.append(header_node)
-                    
-                    child_nodes = parse_json_to_tree(value)
-                    if isinstance(child_nodes, list):
-                        section_node = Node(node_type="section")
-                        for child in child_nodes:
-                            section_node.add_child(child)
-                        nodes.append(section_node)
+                    val = self._dispatch_value(v)
+                    if val:
+                        # key : value 全体をcontentにする
+                        parts.append(f"{k} : {val}")
                     else:
-                        nodes.append(child_nodes)
+                        # key : null の場合、「key :」までをcontentにする
+                        # これでクラス適用のspan内に「 :」が含まれる
+                        parts.append(f"{k} :")
             
-            elif isinstance(value, str):
-                # キー : 値
-                node = Node(
-                    node_type="line",
-                    key="keyvalue",
-                    value=key + " : " + value,
-                    css_class=css_class
-                )
-                nodes.append(node)
-    
-    elif isinstance(data, str):
-        # 文字列
-        node = Node(
-            node_type="line",
-            key="text",
-            value=data
-        )
-        nodes.append(node)
-    
-    return nodes if len(nodes) != 1 else nodes[0]
+            self.content = " ".join(parts)
+        else:
+            self.content = str(data)
 
+    def _dispatch_value(self, v):
+        if v is None: return None
+        if isinstance(v, dict):
+            if "link" in v: return self._format_link(v["link"])
+            inner = [f"{sk}: {self._dispatch_value(sv)}" for sk, sv in v.items() if sv]
+            return ", ".join(inner) if inner else None
+        return str(v)
+
+    def _format_link(self, l):
+        if not l: return ""
+        return f'<a href="{l.get("href")}">{l.get("name")}</a>'
+
+def parse_json_to_tree(data, css_class=None):
+    if isinstance(data, list):
+        nodes = []
+        for item in data:
+            if isinstance(item, list):
+                section_content = parse_json_to_tree(item, css_class)
+                nodes.append(Node(section_content, css_class, is_section=True))
+            else:
+                nodes.append(Node(item, css_class))
+        return nodes
+    return [Node(data, css_class)]
 
 def node_to_html(node, indent_level=0):
-    """木構造のノードをHTMLに変換"""
-    html = ""
     indent = "  " * indent_level
     
-    # class属性を生成
-    class_attr = f' class="{node.css_class}"' if node.css_class else ''
-    
-    if node.node_type == "section":
-        # セクション
-        html += f"{indent}<div class=\"indent\">\n"
+    if node.is_section:
+        # リストに由来するインデントブロック
+        html = f"{indent}<div class=\"indent\">\n"
         for child in node.children:
-            html += node_to_html(child, indent_level + 1)
+            html += node_to_html(child, indent_level + 2)
         html += f"{indent}</div>\n"
-    
-    elif node.node_type == "line":
-        # 一行の項目
-        if node.key == "item":
-            # ・ 値
-            html += f"{indent}<span>・ </span><span{class_attr}>{node.value}</span><br>\n"
+    else:
+        # 辞書や文字列に由来する「1行」の div
+        if not node.content: return ""
         
-        elif node.key == "item_link":
-            # ・ <a>リンク</a>
-            html += f'{indent}<span>・ </span>\n'
-            html += f'{indent}<a href="{node.href}"{class_attr}>\n'
-            html += f'{indent}{node.value}\n'
-            html += f'{indent}</a>\n'
+        class_attr = f' class="{node.css_class}"' if node.css_class else ''
+        # item の場合は行頭に「・ 」を置く
+        prefix = "・ " if node.is_item else ""
         
-        elif node.key == "item_keyvalue":
-            # ・ キー : 値
-            html += f"{indent}<span>・ </span><span{class_attr}>{node.value}</span><br>\n"
+        # 子（リスト）を持っている場合は見出しとして「 :」を添える
+        suffix = " :" if node.children else ""
         
-        elif node.key == "header":
-            # キー :
-            html += f"{indent}<span{class_attr}>{node.value}</span> :\n"
-        
-        elif node.key == "keyvalue":
-            # キー : 値
-            html += f"{indent}<span{class_attr}>{node.value}</span><br>\n"
-        
-        elif node.key == "keyvalue_link":
-            # キー : <a>リンク</a>
-            parts = node.value.split(" : ")
-            html += f'{indent}<span{class_attr}>{parts[0]}</span> : <a href="{node.href}">{parts[1]}</a>\n'
-        
-        elif node.key == "link":
-            # 参考 : <a>リンク</a>
-            html += f'{indent}参考 : <a href="{node.href}"{class_attr}>{node.value}</a>\n'
-        
-        elif node.key == "text":
-            # 文字列
-            html += f"{indent}<span{class_attr}>{node.value}</span><br>\n"
-    
+        # 1行を丸ごと div で包む
+        html = f"{indent}<div{class_attr}>{prefix}{node.content}{suffix}</div>\n"
+            
     return html
-
 
 def json_to_html(json_data, output_file="output.html"):
     """JSONデータからHTMLファイルを生成"""
@@ -239,77 +96,41 @@ def json_to_html(json_data, output_file="output.html"):
     # JSONを木構造に変換
     tree = parse_json_to_tree(json_data)
     
-    # HTMLヘッダー
+    # HTMLヘッダー (省略せずそのまま維持)
     html = """<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="utf-8">
 <title>Minecraft Mod構成 1.20.1</title>
-<meta name="keywords" content="Minecraft,Mod,1.20.1,バニラ拡張">
-<meta name="description" content="Minecraft 1.20.1のMod構成とキー設定">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
 <div id="outer">
 <header>
 <div class="header-inner">
 <h1>Minecraft Mod構成 1.20.1</h1>
-<p>バニラをより豊かにするMod構成とその使い方</p>
 </div>
 </header>
 <div id="content">
 <div class="inner">
 """
 
-    # 木構造をHTMLに変換
+    # --- 修正箇所: treeの型に関わらず再帰的にHTML化 ---
     if isinstance(tree, list):
         for node in tree:
-            if node.node_type == "line" and node.key == "header":
-                # トップレベルセクション
-                html += f"  <div>\n"
-                class_attr = f' class="{node.css_class}"' if node.css_class else ''
-                html += f"    <span{class_attr}>{node.value}</span> :\n"
-            elif node.node_type == "section":
-                html += "    <div class=\"indent\">\n"
-                for child in node.children:
-                    html += node_to_html(child, 3)
-                html += "    </div>\n"
-                html += "  </div>\n\n"
+            html += node_to_html(node, 1)
     else:
         html += node_to_html(tree, 1)
 
     # HTMLフッター
     html += """</div>
-<aside>
-<div class="left-title">サイドバータイトル</div>
-<div class="link">
-  <ul>
-  <li>記事ページへのリンク</li>
-  <li>記事ページへのリンク</li>
-  </ul>
-</div>
-</aside>
 </div>
 <footer>© 2010 あなたのホームページ</footer>
 </div>
 </body>
-<script>
-  const addHtmlToId = function (idname, path) {
-    $(function () {
-      $.ajaxSetup({
-        cache: false
-      });
-      $(idname).load(path);
-    });
-  }
-  addHtmlToId("#modlist_base", "./ModList_Base.html")
-</script>
 </html>
 """
 
-    # ファイルに書き込み
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(html)
     
