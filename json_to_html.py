@@ -3,11 +3,12 @@ import sys
 
 class Node:
     """木構造のノード"""
-    def __init__(self, node_type="line", key=None, value=None, href=None):
+    def __init__(self, node_type="line", key=None, value=None, href=None, css_class=None):
         self.node_type = node_type  # "line" or "section"
         self.key = key
         self.value = value
         self.href = href
+        self.css_class = css_class
         self.children = []
     
     def add_child(self, child):
@@ -15,7 +16,7 @@ class Node:
         return child
     
     def __repr__(self):
-        return f"Node(type={self.node_type}, key={self.key}, value={self.value}, children={len(self.children)})"
+        return f"Node(type={self.node_type}, key={self.key}, value={self.value}, class={self.css_class}, children={len(self.children)})"
 
 
 def parse_json_to_tree(data):
@@ -36,7 +37,13 @@ def parse_json_to_tree(data):
     
     elif isinstance(data, dict):
         # 辞書 = 一行の項目
+        css_class = data.get("class", None)  # class属性を取得
+        
         for key, value in data.items():
+            if key == "class":
+                # class属性はスキップ（他のキーで使用）
+                continue
+            
             if key == "item":
                 # ・ アイテム
                 if isinstance(value, dict):
@@ -47,7 +54,8 @@ def parse_json_to_tree(data):
                             node_type="line",
                             key="item_link",
                             value=link_data.get("name"),
-                            href=link_data.get("href")
+                            href=link_data.get("href"),
+                            css_class=css_class
                         )
                         nodes.append(node)
                     else:
@@ -56,7 +64,8 @@ def parse_json_to_tree(data):
                             node = Node(
                                 node_type="line",
                                 key="item_keyvalue",
-                                value=k + (" : " + v if v else "")
+                                value=k + (" : " + v if v else ""),
+                                css_class=css_class
                             )
                             nodes.append(node)
                 else:
@@ -64,7 +73,8 @@ def parse_json_to_tree(data):
                     node = Node(
                         node_type="line",
                         key="item",
-                        value=value
+                        value=value,
+                        css_class=css_class
                     )
                     nodes.append(node)
             
@@ -75,7 +85,18 @@ def parse_json_to_tree(data):
                     node_type="line",
                     key="link",
                     value=link_data.get("name"),
-                    href=link_data.get("href")
+                    href=link_data.get("href"),
+                    css_class=css_class
+                )
+                nodes.append(node)
+
+            elif key == "text":
+                # text : 値
+                node = Node(
+                    node_type="line",
+                    key="text",
+                    value=value,
+                    css_class=css_class
                 )
                 nodes.append(node)
             
@@ -84,7 +105,8 @@ def parse_json_to_tree(data):
                 node = Node(
                     node_type="line",
                     key="header",
-                    value=key
+                    value=key,
+                    css_class=css_class
                 )
                 nodes.append(node)
             
@@ -93,7 +115,8 @@ def parse_json_to_tree(data):
                 header_node = Node(
                     node_type="line",
                     key="header",
-                    value=key
+                    value=key,
+                    css_class=css_class
                 )
                 nodes.append(header_node)
                 
@@ -109,7 +132,8 @@ def parse_json_to_tree(data):
                         node_type="line",
                         key="keyvalue_link",
                         value=key + " : " + link_data.get("name"),
-                        href=link_data.get("href")
+                        href=link_data.get("href"),
+                        css_class=css_class
                     )
                     nodes.append(node)
                 else:
@@ -117,7 +141,8 @@ def parse_json_to_tree(data):
                     header_node = Node(
                         node_type="line",
                         key="header",
-                        value=key
+                        value=key,
+                        css_class=css_class
                     )
                     nodes.append(header_node)
                     
@@ -135,7 +160,8 @@ def parse_json_to_tree(data):
                 node = Node(
                     node_type="line",
                     key="keyvalue",
-                    value=key + " : " + value
+                    value=key + " : " + value,
+                    css_class=css_class
                 )
                 nodes.append(node)
     
@@ -156,6 +182,9 @@ def node_to_html(node, indent_level=0):
     html = ""
     indent = "  " * indent_level
     
+    # class属性を生成
+    class_attr = f' class="{node.css_class}"' if node.css_class else ''
+    
     if node.node_type == "section":
         # セクション
         html += f"{indent}<div class=\"indent\">\n"
@@ -167,38 +196,39 @@ def node_to_html(node, indent_level=0):
         # 一行の項目
         if node.key == "item":
             # ・ 値
-            html += f"{indent}<span>・ </span>{node.value}<br>\n"
+            html += f"{indent}<span>・ </span><span{class_attr}>{node.value}</span><br>\n"
         
         elif node.key == "item_link":
             # ・ <a>リンク</a>
             html += f'{indent}<span>・ </span>\n'
-            html += f'{indent}<a href="{node.href}">\n'
+            html += f'{indent}<a href="{node.href}"{class_attr}>\n'
             html += f'{indent}{node.value}\n'
             html += f'{indent}</a>\n'
         
         elif node.key == "item_keyvalue":
             # ・ キー : 値
-            html += f"{indent}<span>・ </span>{node.value}<br>\n"
+            html += f"{indent}<span>・ </span><span{class_attr}>{node.value}</span><br>\n"
         
         elif node.key == "header":
             # キー :
-            html += f"{indent}{node.value} :\n"
+            html += f"{indent}<span{class_attr}>{node.value}</span> :\n"
         
         elif node.key == "keyvalue":
             # キー : 値
-            html += f"{indent}{node.value}<br>\n"
+            html += f"{indent}<span{class_attr}>{node.value}</span><br>\n"
         
         elif node.key == "keyvalue_link":
             # キー : <a>リンク</a>
-            html += f'{indent}{node.value.split(" : ")[0]} : <a href="{node.href}">{node.value.split(" : ")[1]}</a>\n'
+            parts = node.value.split(" : ")
+            html += f'{indent}<span{class_attr}>{parts[0]}</span> : <a href="{node.href}">{parts[1]}</a>\n'
         
         elif node.key == "link":
             # 参考 : <a>リンク</a>
-            html += f'{indent}参考 : <a href="{node.href}">{node.value}</a>\n'
+            html += f'{indent}参考 : <a href="{node.href}"{class_attr}>{node.value}</a>\n'
         
         elif node.key == "text":
             # 文字列
-            html += f"{indent}{node.value}<br>\n"
+            html += f"{indent}<span{class_attr}>{node.value}</span><br>\n"
     
     return html
 
@@ -239,7 +269,8 @@ def json_to_html(json_data, output_file="output.html"):
             if node.node_type == "line" and node.key == "header":
                 # トップレベルセクション
                 html += f"  <div>\n"
-                html += f"    {node.value} :\n"
+                class_attr = f' class="{node.css_class}"' if node.css_class else ''
+                html += f"    <span{class_attr}>{node.value}</span> :\n"
             elif node.node_type == "section":
                 html += "    <div class=\"indent\">\n"
                 for child in node.children:
