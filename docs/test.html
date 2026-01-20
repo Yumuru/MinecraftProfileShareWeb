@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>ゆむレオマイクラサーバー概要</title>
+<meta name="description" content="ページの説明">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+<div id="outer">
+<header>
+<div class="header-inner">
+<h1>ゆむレオマイクラサーバー概要</h1>
+<p>ゆむるとレオンのマイクラのModサーバー説明書</p>
+</div>
+</header>
+<div id="content">
+  <div class="inner">
+    <div id="modlist_base"></div>
+    <h2>レオン君のマイクラサーバーについて</h2>
+    <div>マイクラの環境</div>
+  </div>
+  <aside>
+  <div class="link">
+    <ul style="margin-left: .5em">
+    <li><a href="index.html">概要</a></li>
+    </ul>
+  </div>
+  <div class="left-title">Mod構成</div>
+  <div class="link">
+    <ul>
+    <li><a href="base.html">ベース(環境・システム)</a></li>
+    <li><a href="comfort.html">便利アイテム・ブロック</a></li>
+    <li><a href="extend.html">拡張(工魔・農業・物流)</a></li>
+    <li><a href="leonadd.html">レオン君追加Mod</a></li>
+    </ul>
+  </div>
+  </aside>
+</div>
+<footer>© 2010 あなたのホームページ</footer>
+</div>
+</body>
+
+<script>
+  const addHtmlToId = function (idname, path) {
+    $(function () {
+      $.ajaxSetup({
+        cache: false
+      });
+      $(idname).load(path);
+    });
+  }
+
+  addHtmlToId("#modlist_base", "./modlist/base.html")
+</script>
+</html>

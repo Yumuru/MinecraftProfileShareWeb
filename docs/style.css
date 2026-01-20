@@ -194,3 +194,6 @@ blockquote {
 .underline {
   text-decoration: underline;
 }
+.top-space {
+  margin-top: 1em;
+}

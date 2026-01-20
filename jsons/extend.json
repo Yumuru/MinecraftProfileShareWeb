@@ -1,0 +1,43 @@
+[
+  { "text": "Mod構成 - 拡張(農業・工業・魔術・物流)", "class": "h2" },
+  [
+    { "Mod構成詳細": null, "class": "h3" },
+    [
+      { "農業": null, "class": "bold" },
+      [
+        { "item": "Croptopia (農業。序盤はジュースが満腹度回復にいい)" },
+        { "item": "Croptopia Additions" }
+      ],
+      { "工業系": null, "class": "bold" },
+      [
+        { "item": "Create (ブロックがたくさん動き回る工業Mod)" },
+        { "item": "Mekanism (強力な工業Mod)" },
+        [
+          { "item": "Mekanism Generators" },
+          { "item": "Mekanism Tools" },
+          { "item": "Mekanism Additions" }
+        ],
+        { "item": "Additional Enchanted Miner (強力な露天採掘Mod)" }
+      ],
+      { "魔術系": null, "class": "bold" },
+      [
+        { "item": "Ars Nouveau (魔術Mod、いろんなスペルを使える)" },
+        { "item": "Botania (お花で魔術)" }
+      ],
+      { "倉庫、物流系": null, "class": "bold" },
+      [
+        { "item": "Iron Chests (大容量チェスト)" },
+        { "item": "Refined Storage (倉庫Mod : 簡単)" },
+        { "item": "Applied Energistics2 (倉庫+物流Mod : 難しい)" },
+        { "item": "Applied Mekanistics (AE2 のMekanism 連携)" },
+        { "item": "AEInfinityBooster (AE2無線範囲無制限化)" },
+        { "item": "AE2 Things (AE2 に種類制限なしセルを追加するなど)" },
+        { "item": "Extended AE (AE2設定拡張)" }
+      ],
+      { "便利アイテム (エネルギー消費系)": null, "class": "bold" },
+      [
+        { "item": "Building Gadgets (様々なブロックの配置ができる)" }
+      ]
+    ]
+  ]
+]
